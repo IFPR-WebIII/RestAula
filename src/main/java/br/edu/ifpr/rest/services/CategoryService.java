@@ -2,6 +2,7 @@ package br.edu.ifpr.rest.services;
 
 import br.edu.ifpr.rest.domain.Category;
 import br.edu.ifpr.rest.repositories.CategoryRepository;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +23,14 @@ public class CategoryService {
     }
 
     public Category findById(Integer id){
-        //return repository.findById(id).get();
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow();
     }
 
     public Category save(Category category){
        return repository.save(category);
     }
 
+    public Category create(Category category) {
+        return repository.save(category);
+    }
 }

@@ -1,34 +1,29 @@
-package br.edu.ifpr.rest.controllers;
+package br.edu.ifpr.rest.resources;
 
 import br.edu.ifpr.rest.domain.Category;
-import br.edu.ifpr.rest.repositories.CategoryRepository;
 import br.edu.ifpr.rest.services.CategoryService;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/categorias")
-public class CategoriaController {
+public class CategoriaResource {
 
     CategoryService service;
 
     @Autowired
-    public CategoriaController(CategoryService service){
+    public CategoriaResource(CategoryService service){
         this.service = service;
     }
 
     @GetMapping(produces = "application/json")
-    public List<Category> findAll(){
+    public ResponseEntity<List<Category>> findAll(){
 
         Category c1 = new Category(1, "Informática");
         service.save(c1);
@@ -36,13 +31,18 @@ public class CategoriaController {
         Category c2 = new Category(2, "Escritório");
         service.save(c2);
 
-        return service.findAll();
+        List<Category> categories = service.findAll();
+
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(categories);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> findById(@PathVariable Integer id){
-
         return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
 
+    @PostMapping()
+    public Category create(@RequestBody  Category category){
+        return service.create(category);
+    }
 }
