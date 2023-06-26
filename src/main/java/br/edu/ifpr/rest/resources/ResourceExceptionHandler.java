@@ -13,12 +13,24 @@ import java.util.NoSuchElementException;
 public class ResourceExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<StandardError> idNaoEncontrado(NoSuchElementException exception){
+    public ResponseEntity<StandardError> noSuchElementException(NoSuchElementException exception){
 
         StandardError error = new StandardError("NoSuchElementException",
                 HttpStatus.NOT_FOUND,
                 System.currentTimeMillis(),
-                "Id buscado não foi encontrado");
+                exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<StandardError> illegalArgumentException(IllegalArgumentException exception){
+
+        StandardError error = new StandardError("IllegalArgumentException",
+                HttpStatus.NOT_FOUND,
+                System.currentTimeMillis(),
+                exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 

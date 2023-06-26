@@ -7,23 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class CategoryService {
 
-    CategoryRepository repository;
-
     @Autowired
-    public CategoryService(CategoryRepository repository){
-        this.repository = repository;
-    }
+    CategoryRepository repository;
 
     public List<Category> findAll(){
         return repository.findAll();
     }
 
     public Category findById(Integer id){
-        return repository.findById(id).orElseThrow();
+        if(!repository.existsById(id)){
+            throw new IllegalArgumentException("O id informado não existe");
+        }
+        return repository.findById(id).get();
     }
 
     public Category save(Category category){
@@ -32,5 +32,22 @@ public class CategoryService {
 
     public Category create(Category category) {
         return repository.save(category);
+    }
+
+    public Category update(Category category) {
+
+        if (!repository.existsById(category.getId())){
+            throw new NoSuchElementException("Id da categoria não encontrado");
+        }
+
+        return repository.save(category);
+    }
+
+    public void deleteById(Integer id) {
+        if (!repository.existsById(id)){
+            throw new NoSuchElementException("Id da categoria não encontrado");
+        }
+
+        repository.deleteById(id);
     }
 }

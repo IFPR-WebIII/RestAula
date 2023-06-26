@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.plaf.UIResource;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class CategoriaResource {
         this.service = service;
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping()
     public ResponseEntity<List<Category>> findAll(){
 
         Category c1 = new Category(1, "Informática");
@@ -33,16 +34,38 @@ public class CategoriaResource {
 
         List<Category> categories = service.findAll();
 
-        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(categories);
+        return ResponseEntity.status(HttpStatus.OK).body(categories);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> findById(@PathVariable Integer id){
-        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+        Category category = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(category);
     }
 
     @PostMapping()
-    public Category create(@RequestBody  Category category){
-        return service.create(category);
+    public ResponseEntity<Category> create(@RequestBody  Category category){
+        category = service.create(category);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(category);
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> update(@PathVariable Integer id, @RequestBody Category category) {
+
+        category.setId(id);
+        category = service.update(category);
+
+        return ResponseEntity.status(HttpStatus.OK).body(category);
+
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+
+        service.deleteById(id);
+
     }
 }
