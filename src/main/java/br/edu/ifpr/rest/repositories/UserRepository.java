@@ -1,10 +1,14 @@
 package br.edu.ifpr.rest.repositories;
 
-import br.edu.ifpr.rest.domain.entities.Category;
+import br.edu.ifpr.rest.domain.entities.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, UUID> { }
+public interface UserRepository  extends JpaRepository<User, UUID> {
+
+    User findByUsername(String username);
+
+}

@@ -1,16 +1,15 @@
 package br.edu.ifpr.rest.resources;
 
-import br.edu.ifpr.rest.domain.Category;
+import br.edu.ifpr.rest.domain.entities.Category;
 import br.edu.ifpr.rest.services.CategoryService;
-import org.hibernate.ObjectNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.plaf.UIResource;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/categorias")
@@ -26,25 +25,18 @@ public class CategoriaResource {
     @GetMapping()
     public ResponseEntity<List<Category>> findAll(){
 
-        Category c1 = new Category(1, "Informática");
-        service.save(c1);
-
-        Category c2 = new Category(2, "Escritório");
-        service.save(c2);
-
         List<Category> categories = service.findAll();
-
         return ResponseEntity.status(HttpStatus.OK).body(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> findById(@PathVariable Integer id){
+    public ResponseEntity<Category> findById(@PathVariable UUID id){
         Category category = service.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(category);
     }
 
     @PostMapping()
-    public ResponseEntity<Category> create(@RequestBody  Category category){
+    public ResponseEntity<Category> create(@Valid @RequestBody  Category category){
         category = service.create(category);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
@@ -52,7 +44,7 @@ public class CategoriaResource {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Integer id, @RequestBody Category category) {
+    public ResponseEntity<Category> update(@PathVariable UUID id, @RequestBody Category category) {
 
         category.setId(id);
         category = service.update(category);
@@ -63,7 +55,7 @@ public class CategoriaResource {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable UUID id) {
 
         service.deleteById(id);
 

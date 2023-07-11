@@ -1,13 +1,13 @@
 package br.edu.ifpr.rest.services;
 
-import br.edu.ifpr.rest.domain.Category;
+import br.edu.ifpr.rest.domain.entities.Category;
 import br.edu.ifpr.rest.repositories.CategoryRepository;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
@@ -19,7 +19,7 @@ public class CategoryService {
         return repository.findAll();
     }
 
-    public Category findById(Integer id){
+    public Category findById(UUID id){
         if(!repository.existsById(id)){
             throw new IllegalArgumentException("O id informado não existe");
         }
@@ -43,7 +43,7 @@ public class CategoryService {
         return repository.save(category);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(UUID id) {
         if (!repository.existsById(id)){
             throw new NoSuchElementException("Id da categoria não encontrado");
         }
